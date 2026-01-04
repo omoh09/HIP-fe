@@ -3,12 +3,22 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Line } from 'react-chartjs-2'; // Importing Line chart from Chart.js
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement } from 'chart.js'; // Import the missing elements
-import DatePicker from 'react-datepicker'; // Import react-datepicker
-import "react-datepicker/dist/react-datepicker.css"; // Import CSS for the datepicker
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+} from 'chart.js';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-// Registering Chart.js components
+// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -16,11 +26,17 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  PointElement,  // Register PointElement
-  LineElement    // Register LineElement
+  PointElement,
+  LineElement
 );
 
-const demoData = [
+type ReportItem = {
+  date: string;
+  revenue: number;
+  clients: number;
+};
+
+const demoData: ReportItem[] = [
   { date: '2025-01-01', revenue: 10000, clients: 50 },
   { date: '2025-02-01', revenue: 12000, clients: 55 },
   { date: '2025-03-01', revenue: 13000, clients: 60 },
@@ -29,21 +45,30 @@ const demoData = [
 ];
 
 export default function ReportModule() {
-  const [selectedDateRange, setSelectedDateRange] = useState<[Date, Date]>([new Date('2025-01-01'), new Date('2025-05-01')]);
-  const [filteredData, setFilteredData] = useState(demoData);
+  const [selectedDateRange, setSelectedDateRange] = useState<
+    [Date | null, Date | null]
+  >([new Date('2025-01-01'), new Date('2025-05-01')]);
 
-  // Filter data based on the selected date range
-  const handleDateRangeChange = (range: [Date, Date]) => {
+  const [filteredData, setFilteredData] =
+    useState<ReportItem[]>(demoData);
+
+  const handleDateRangeChange = (
+    range: [Date | null, Date | null]
+  ) => {
     setSelectedDateRange(range);
+
+    const [start, end] = range;
+
+    if (!start || !end) return;
 
     const filtered = demoData.filter((item) => {
       const itemDate = new Date(item.date);
-      return itemDate >= range[0] && itemDate <= range[1];
+      return itemDate >= start && itemDate <= end;
     });
+
     setFilteredData(filtered);
   };
 
-  // Chart Data Setup
   const chartData = {
     labels: filteredData.map((item) => item.date),
     datasets: [
@@ -64,12 +89,11 @@ export default function ReportModule() {
     ],
   };
 
-  // Chart Options
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: 'top' as const,
       },
       title: {
         display: true,
@@ -80,44 +104,56 @@ export default function ReportModule() {
 
   const handleExportReport = () => {
     console.log('Exporting report...');
-    // Implement export logic, like converting chart data to CSV/PDF
   };
 
   return (
     <div className="space-y-6">
-      {/* High-Level Metrics */}
+      {/* Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-r from-blue-500 to-teal-500 text-white shadow-xl rounded-lg hover:scale-105 transition-transform">
+        <Card className="bg-gradient-to-r from-blue-500 to-teal-500 text-white">
           <CardHeader>
             <CardTitle>Total Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">${filteredData.reduce((sum, item) => sum + item.revenue, 0).toFixed(2)}</p>
+            <p className="text-3xl font-semibold">
+              $
+              {filteredData
+                .reduce((sum, item) => sum + item.revenue, 0)
+                .toFixed(2)}
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-green-500 to-lime-400 text-white shadow-xl rounded-lg hover:scale-105 transition-transform">
+        <Card className="bg-gradient-to-r from-green-500 to-lime-400 text-white">
           <CardHeader>
             <CardTitle>Total Clients</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">{filteredData.reduce((sum, item) => sum + item.clients, 0)}</p>
+            <p className="text-3xl font-semibold">
+              {filteredData.reduce(
+                (sum, item) => sum + item.clients,
+                0
+              )}
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Date Range Filter */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="w-full sm:w-1/3">
-          <DatePicker
-            selected={selectedDateRange[0]}
-            onChange={(dates: [Date, Date]) => handleDateRangeChange(dates)}
-            startDate={selectedDateRange[0]}
-            endDate={selectedDateRange[1]}
-            selectsRange
-            inline
-          />
-        </div>
+      {/* Filters */}
+      <div className="flex justify-between items-center">
+        <DatePicker
+          selected={selectedDateRange[0]}
+          onChange={(dates) =>
+            handleDateRangeChange(
+              dates as [Date | null, Date | null]
+            )
+          }
+          startDate={selectedDateRange[0]}
+          endDate={selectedDateRange[1]}
+          selectsRange
+          inline
+        />
+
         <Button
           variant="outline"
           onClick={handleExportReport}

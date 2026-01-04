@@ -64,11 +64,11 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(
             {/* ===============================
                WATERMARK
                =============================== */}
-            {data.status !== "UNPAID" && (
+            {data.status !== "pending" && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <span
                   className={`text-8xl font-bold rotate-45 opacity-15 ${
-                    data.status === "PAID"
+                    data.status === "paid"
                       ? "text-green-300"
                       : "text-gray-300"
                   }`}
@@ -97,7 +97,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(
               <div className="text-right">
                 <span
                   className={`px-3 py-1 rounded text-xs font-semibold ${
-                    data.status === "PAID"
+                    data.status === "paid"
                       ? "bg-green-100 text-green-700"
                       : "bg-yellow-100 text-yellow-700"
                   }`}

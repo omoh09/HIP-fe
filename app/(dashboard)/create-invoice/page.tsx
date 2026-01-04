@@ -13,7 +13,7 @@ export default function CreateInvoicePage() {
 
   const [data, setData] = useState<InvoiceData>({
     logo: "",
-    status: "DRAFT",
+    status: "pending",
     currency: "NGN",
     invoiceNumber: "",
     invoiceDate: "",

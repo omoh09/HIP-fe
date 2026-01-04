@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Users, Settings, Shield, Activity, Menu, FileText, BarChart, UserPlus, FileImport, Download, LogOut } from 'lucide-react';
+import { Users, Settings, Shield, Activity, Menu, FileText, BarChart, UserPlus, Download, LogOut } from 'lucide-react';
 import { useUser } from '@/app/context/UserContext';
 
 export default function DashboardLayout({

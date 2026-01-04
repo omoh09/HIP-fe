@@ -39,23 +39,28 @@ export default function ClientInvoice({ initialData }: Props) {
   const [showDiscount, setShowDiscount] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  const [data, setData] = useState<InvoiceData>(
-    initialData ?? {
-      logo: "",
-      status: "DRAFT",
-      currency: "NGN",
-      invoiceNumber: "", // backend will assign
-      invoiceDate: "",
-      dueDate: "",
-      clientName: "",
-      clientEmail: "",
-      clientAddress: "",
-      items: [{ item: "", description: "", quantity: 1, rate: 0 }],
-      discountType: "fixed",
-      discountValue: 0,
-      taxRate: 0,
-    }
-  );
+  const [data, setData] = useState<InvoiceData>({
+  ...{
+    logo: "",
+    status: "pending",
+    currency: "NGN",
+    invoiceNumber: "",
+    invoiceDate: "",
+    dueDate: "",
+    clientName: "",
+    clientEmail: "",
+    clientAddress: "",
+    items: [{ item: "", description: "", quantity: 1, rate: 0 }],
+    discountType: "fixed",
+    discountValue: 0,
+    taxRate: 0,
+  },
+  ...initialData,
+  items: initialData?.items?.length
+    ? initialData.items
+    : [{ item: "", description: "", quantity: 1, rate: 0 }],
+});
+
 
   /* ---------------- HELPERS ---------------- */
   const update = (key: keyof InvoiceData, value: any) =>

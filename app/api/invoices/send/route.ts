@@ -6,7 +6,9 @@ const API_BASE = "http://127.0.0.1:8000";
 
 export async function POST(req: Request) {
   try {
-    const token = cookies().get("auth")?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth')?.value;
+
     if (!token) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     const { withPaymentLink, ...invoiceData } = await req.json();

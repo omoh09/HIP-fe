@@ -31,36 +31,36 @@ export async function createInvoice(data: any) {
 }
 
 /* ================= UPDATE / SAVE ================= */
-export async function saveInvoice(id: string, data: InvoiceData) {
-  const token = getAuthToken();
+// export async function saveInvoice(id: string, data: InvoiceData) {
+//   const token = getAuthToken();
 
-  const res = await axios.put(`${API_BASE}/invoices/${id}`, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+//   const res = await axios.put(`${API_BASE}/invoices/${id}`, data, {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
 
-  revalidatePath("/dashboard/invoices");
-  revalidatePath(`/dashboard/invoices/${id}`);
+//   revalidatePath("/dashboard/invoices");
+//   revalidatePath(`/dashboard/invoices/${id}`);
 
-  return res.data;
-}
+//   return res.data;
+// }
 
 /* ================= SEND ================= */
-export async function sendInvoice(
-  data: InvoiceData,
-  withPaymentLink: boolean
-) {
-  const token = getAuthToken();
+// export async function sendInvoice(
+//   data: InvoiceData,
+//   withPaymentLink: boolean
+// ) {
+//   const token = getAuthToken();
 
-  const endpoint = withPaymentLink
-    ? "/invoices/send-with-payment"
-    : "/invoices/send";
+//   const endpoint = withPaymentLink
+//     ? "/invoices/send-with-payment"
+//     : "/invoices/send";
 
-  const res = await axios.post(`${API_BASE}${endpoint}`, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+//   const res = await axios.post(`${API_BASE}${endpoint}`, data, {
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
 
-  return res.data;
-}
+//   return res.data;
+// }
 
 /* ================= LIST ================= */
 export async function getInvoices() {

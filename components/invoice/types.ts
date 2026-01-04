@@ -5,7 +5,7 @@ export type InvoiceItem = {
   rate: number;
 };
 
-export type InvoiceStatus = "DRAFT" | "UNPAID" | "PAID";
+export type InvoiceStatus = "pending" | "overdue" | "paid";
 
 export type InvoiceData = {
   logo?: string;

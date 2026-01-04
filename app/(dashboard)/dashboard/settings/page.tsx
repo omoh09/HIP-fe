@@ -27,16 +27,7 @@ export default function SettingsModule() {
   };
 
   // Handle file upload
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, type: string) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    if (file) {
-      if (type === 'profile') {
-        setUserDetails((prev) => ({ ...prev, profilePicture: URL.createObjectURL(file) }));
-      } else if (type === 'business') {
-        setUserDetails((prev) => ({ ...prev, businessLogo: URL.createObjectURL(file) }));
-      }
-    }
-  };
+ 
 
   // Handle password update
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,11 +105,11 @@ export default function SettingsModule() {
           <div className="mt-4">
             <Label htmlFor="businessLogo">Business Logo</Label>
             <div className="flex items-center">
-              <Avatar size="lg">
-                <AvatarFallback>
+              {/* <Avatar size="lg">
+                <AvatarFallback> */}
                   {userDetails.businessName[0]}
-                </AvatarFallback>
-              </Avatar>
+                {/* </AvatarFallback>
+              </Avatar> */}
               <Button
                 variant="outline"
                 className="ml-4 text-blue-600 hover:text-blue-800"

@@ -10,7 +10,13 @@ import { useUser } from '@/app/context/UserContext';
 
 export default function DashboardHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user , isLoggedIn } = useUser();
+  // const { user , isLoggedIn } = useUser();
+  const { user, isLoading } = useUser();
+  
+  if (isLoading) return null;
+
+  const isLoggedIn = !!user;
+
   console.log('User context', user, isLoggedIn);
 
   return (

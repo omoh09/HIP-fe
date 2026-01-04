@@ -1,51 +1,66 @@
 'use client';
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import useSWR, { mutate } from 'swr';
+import type { User } from '@/lib/types/user';
 
-const UserContext = createContext({
-  user: null,
-  isLoading: true,
-  isError: null,
-  logout: async () => {},
-});
+type UserContextValue = {
+  user: User | null;
+  isLoading: boolean;
+  isError: unknown;
+  logout: () => Promise<void>;
+};
 
-const fetchUser = async () => {
-  const res = await fetch('/api/auth/me', { credentials: 'include' });
+const UserContext = createContext<UserContextValue | undefined>(
+  undefined
+);
+
+const fetchUser = async (): Promise<User | null> => {
+  const res = await fetch('/api/auth/me', {
+    credentials: 'include',
+  });
   if (!res.ok) return null;
   return res.json();
 };
 
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const { data, error } = useSWR('/api/auth/me', fetchUser, {
     revalidateOnFocus: false,
   });
 
-  const user = data ?? null;
-  const isLoading = !data && !error;
-  const isError = error;
-
-  // ✅ New logout function that clears context
   const logout = async () => {
-    try {
-      const res = await fetch('/api/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      if (!res.ok) throw new Error('Logout failed');
+    await fetch('/api/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
 
-      // Clear SWR cache and context
-      mutate('/api/auth/me', null, false); 
-    } catch (err) {
-      console.error('Logout error:', err);
-    }
+    mutate('/api/auth/me', null, false);
   };
 
   return (
-    <UserContext.Provider value={{ user, isLoading, isError, logout }}>
+    <UserContext.Provider
+      value={{
+        user: data ?? null,
+        isLoading: !data && !error,
+        isError: error,
+        logout,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
 };
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => {
+  const ctx = useContext(UserContext);
+  if (!ctx) {
+    throw new Error(
+      'useUser must be used within UserProvider'
+    );
+  }
+  return ctx;
+};

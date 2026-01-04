@@ -122,7 +122,9 @@ export default function ResetPasswordPage() {
               {otp.map((value, index) => (
                 <input
                   key={index}
-                  ref={(el) => (otpRefs.current[index] = el)}
+                  ref={(el) => {
+                    otpRefs.current[index] = el;
+                  }}
                   value={value}
                   onChange={(e) => handleOtpChange(e.target.value, index)}
                   onKeyDown={(e) => handleOtpKeyDown(e, index)}

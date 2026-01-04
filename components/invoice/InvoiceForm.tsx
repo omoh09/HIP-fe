@@ -15,7 +15,8 @@ export default function InvoiceForm({ data, setData, onDownload }: Props) {
   const [showDiscount, setShowDiscount] = useState(
     data.discountValue > 0
   );
-  const inputRefs = useRef<HTMLInputElement[]>([]);
+  // const inputRefs = useRef<HTMLInputElement[]>([]);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
@@ -223,9 +224,12 @@ export default function InvoiceForm({ data, setData, onDownload }: Props) {
                   Item
                 </label>
                 <input
-                  ref={(el) =>
-                    (inputRefs.current[i * 4] = el!)
-                  }
+                  // ref={(el) =>
+                  //   (inputRefs.current[i * 4] = el!)
+                  // }
+                  ref={(el) => {
+                    inputRefs.current[i * 4] = el;
+                  }}
                   onKeyDown={handleEnter(i * 4)}
                   value={item.item}
                   onChange={(e) =>
@@ -246,9 +250,9 @@ export default function InvoiceForm({ data, setData, onDownload }: Props) {
                   Description
                 </label>
                 <input
-                  ref={(el) =>
-                    (inputRefs.current[i * 4 + 1] = el!)
-                  }
+                  ref={(el) => {
+                    inputRefs.current[i * 4 + 1] = el; // assign null or HTMLInputElement
+                  }}
                   onKeyDown={handleEnter(i * 4 + 1)}
                   value={item.description}
                   onChange={(e) =>
@@ -267,9 +271,9 @@ export default function InvoiceForm({ data, setData, onDownload }: Props) {
                 <input
                   type="number"
                   min={1}
-                  ref={(el) =>
-                    (inputRefs.current[i * 4 + 2] = el!)
-                  }
+                  ref={(el) => {
+                    inputRefs.current[i * 4 + 2] = el; // assign null or HTMLInputElement
+                  }}
                   onKeyDown={handleEnter(i * 4 + 2)}
                   value={item.quantity}
                   onChange={(e) =>
@@ -290,9 +294,12 @@ export default function InvoiceForm({ data, setData, onDownload }: Props) {
                 <input
                   type="number"
                   min={0}
-                  ref={(el) =>
-                    (inputRefs.current[i * 4 + 3] = el!)
-                  }
+                  // ref={(el) =>
+                  //   (inputRefs.current[i * 4 + 3] = el!)
+                  // }
+                  ref={(el) => {
+                    inputRefs.current[i * 4 + 3] = el; // assign null or HTMLInputElement
+                  }}
                   onKeyDown={handleEnter(i * 4 + 3)}
                   value={item.rate}
                   onChange={(e) =>

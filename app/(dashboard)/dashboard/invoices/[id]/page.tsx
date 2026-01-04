@@ -1,5 +1,5 @@
 import { getInvoice } from "../../actions";
-import ClientInvoice from "../client-page";
+import ClientInvoice from "./client-page";
 
 export default async function EditInvoicePage({
   params,
