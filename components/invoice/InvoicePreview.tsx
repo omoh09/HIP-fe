@@ -227,7 +227,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(
                FOOTER
                =============================== */}
             <div className="absolute bottom-6 left-8 right-8 text-xs text-gray-400 text-center">
-              Generated via HIP on {generatedAt}
+              Generated via Homord Invoice Payment on {generatedAt}
             </div>
           </div>
         </div>

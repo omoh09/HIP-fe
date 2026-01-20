@@ -31,7 +31,7 @@ export default function DashboardHeader() {
           </Link>
 
           {/* DESKTOP NAV */}
-          {!isLoggedIn ? (
+          {/* {!isLoggedIn ? ( */}
           <nav className="hidden md:flex items-center gap-6">
             <Link href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition">
               Product
@@ -52,14 +52,14 @@ export default function DashboardHeader() {
               </Button>
             </div>
           </nav>
-          ) : (
-            <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">
-              {user?.email}
-            </span>
-            <Link href="/dashboard/invoices">Dashboard</Link>
-          </div>
-        )}
+        {/* //   ) : (
+        //     <div className="flex items-center gap-3">
+        //     <span className="text-sm text-gray-600">
+        //       {user?.email}
+        //     </span>
+        //     <Link href="/dashboard/invoices">Dashboard</Link>
+        //   </div> */}
+        {/* // )} */}
 
           {/* MOBILE BUTTON */}
           <button
@@ -72,7 +72,7 @@ export default function DashboardHeader() {
       </header>
 
       {/* MOBILE FULLSCREEN TRAY */}
-      {mobileOpen && (
+      {/* {mobileOpen && ( */}
         <div className="fixed inset-0 z-[999] bg-white overflow-y-auto md:hidden">
           {/* Top bar */}
           <div className="flex items-center justify-between px-6 py-4 border-b">
@@ -107,7 +107,7 @@ export default function DashboardHeader() {
             <ResourcesMenu mobile onNavigate={() => setMobileOpen(false)} />
           </div>
         </div>
-      )}
+      {/* // )} */}
     </>
   );
 }
