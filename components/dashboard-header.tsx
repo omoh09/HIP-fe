@@ -15,9 +15,9 @@ export default function DashboardHeader() {
   
   if (isLoading) return null;
 
-  const isLoggedIn = !!user;
+  // const isLoggedIn = !!user;
 
-  console.log('User context', user, isLoggedIn);
+  // console.log('User context', user, isLoggedIn);
 
   return (
     <>
@@ -72,7 +72,7 @@ export default function DashboardHeader() {
       </header>
 
       {/* MOBILE FULLSCREEN TRAY */}
-      {/* {mobileOpen && ( */}
+      {mobileOpen && (
         <div className="fixed inset-0 z-[999] bg-white overflow-y-auto md:hidden">
           {/* Top bar */}
           <div className="flex items-center justify-between px-6 py-4 border-b">
@@ -107,7 +107,7 @@ export default function DashboardHeader() {
             <ResourcesMenu mobile onNavigate={() => setMobileOpen(false)} />
           </div>
         </div>
-      {/* // )} */}
+       )}
     </>
   );
 }
