@@ -1,0 +1,6 @@
+import Link from 'next/link';
+import type { ReactNode } from 'react';
+export default function ShopShell({ username, name, children }: { username: string; name: string; children: ReactNode }) {
+  const base = `/shop/${username}`;
+  return <div className="min-h-screen bg-[#f6f7f9] text-slate-900"><div className="bg-[#ff5416] px-4 py-2 text-center text-xs font-bold tracking-widest text-white">FRESH FINDS · EASY CHECKOUT · TRACK YOUR ORDER</div><header className="sticky top-0 z-20 border-b bg-white shadow-sm"><div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4"><Link href={base} className="text-2xl font-black tracking-tight text-[#f45118]">{name}</Link><nav className="flex items-center gap-3 text-sm font-semibold sm:gap-6"><Link href={base}>Discover</Link><Link href={`${base}/cart`}>Cart</Link><Link href="/shop/account">My account</Link></nav></div></header><main>{children}</main><footer className="mt-16 border-t bg-white px-4 py-12 text-center text-sm text-slate-500"><p>{name} · Secure invoice powered checkout</p><Link href="/shop/account" className="mt-3 inline-block underline">Orders and saved items</Link><p className="mt-2"><Link href="/shop-addon" className="underline">Sell with Hip Homorrd</Link></p></footer></div>;
+}

@@ -1,0 +1,62 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+.vscode
+
+# Docker
+postgres_data/
+.env*.local
+
+.env
+UPDATE_NOTES_V12.8.md
+AUTH_INTEGRATION_V12.8.2.md
+COMPETITOR_POSITIONING_V13.3.md
+DEPLOY_V13.3.md
+DEPLOY_V13.4.md
+DEPLOY_V13.5.md
+FIX_NOTES_V12.8.1.md
+INVOICE_QR_V13.3.2.md
+MOONPAY_COMMERCE_V13.4.md
+MULTI_MARKET_V13.2.md
+ONBOARDING_ACTIVATION_V13.5.2.md
+PAYMENT_LINKS_V12.9.md
+PLATFORM_PAYMENTS_V13.5.md
+PRODUCTION_UPGRADE_PROMPT_V13.3.md
+PWA_OFFLINE_V13.3.md
+REVIEW_AND_BUSINESS_LINKS_V13.md
+STABILITY_V13.5.1.md
+THIRD_PARTY_NOTICES_QR.md
+VERSION.txt

@@ -1,0 +1,10 @@
+export type User = {
+  id: number;
+  name?: string;
+  email: string;
+  logo?: string;
+  businessName?: string;
+  role: 'owner' | 'member';
+  createdAt: string;
+  updatedAt: string;
+};
