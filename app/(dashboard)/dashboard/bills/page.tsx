@@ -1,11 +1,205 @@
+
 'use client';
+
 import { useEffect, useState } from 'react';
 import { commerce, money } from '@/components/commerce/api';
-type Bill={id:number;status:string;sender:{name:string;email:string};invoice_number:string;description?:string;currency:string;total_amount:number;amount_paid:number;amount_due:number;payment_status:string;payment_url?:string;due_date?:string;items:{name:string;quantity:number;unit_price:number}[]};
-export default function BillsPage(){
- const [bills,setBills]=useState<Bill[]>([]);const [error,setError]=useState('');const [busy,setBusy]=useState<number>();
- const refresh=()=>commerce<{data:Bill[]}>('bills').then(v=>setBills(v.data)).catch(e=>setError(e.message));
- useEffect(refresh,[]);
- async function respond(id:number,decision:'accepted'|'declined'){setBusy(id);setError('');try{await commerce(`bills/${id}/respond`,'POST',{decision});refresh();}catch(e){setError(e instanceof Error?e.message:'Unable to update bill.');}finally{setBusy(undefined);}}
- return <div className="page-container py-10"><h1 className="text-3xl font-bold">Bills received</h1><p className="mt-2 text-slate-600 dark:text-slate-300">Invoices sent to your registered email appear here. Accept a bill to unlock the sender’s payment options. Only verified payments update its balance.</p>{error&&<p role="alert" className="mt-5 text-red-600">{error}</p>}<div className="mt-7 space-y-4">{bills.map(b=><article key={b.id} className="rounded-2xl border bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-wider text-emerald-600">{b.status}</p><h2 className="mt-1 text-xl font-bold">{b.sender.name} · {b.invoice_number}</h2><p className="text-sm text-slate-500">{b.sender.email} {b.due_date&&`· Due ${b.due_date}`}</p><p className="mt-2">{b.description}</p></div><div className="text-right"><p className="text-xl font-bold">{money(b.total_amount,b.currency)}</p><p className="text-sm">Paid: {money(b.amount_paid,b.currency)} · Due: {money(b.amount_due,b.currency)}</p><p className="text-sm">Payment: {b.payment_status}</p></div></div>{b.items.length>0&&<div className="mt-4 border-t pt-3 text-sm">{b.items.map((i,index)=><p key={index}>{i.name} × {i.quantity} · {money(i.unit_price,b.currency)}</p>)}</div>}<div className="mt-5 flex gap-3">{b.status==='pending'&&<><button disabled={busy===b.id} onClick={()=>respond(b.id,'accepted')} className="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-bold text-white">Accept bill</button><button disabled={busy===b.id} onClick={()=>respond(b.id,'declined')} className="rounded-lg border px-5 py-2 text-sm font-semibold">Decline</button></>}{b.status==='accepted'&&b.payment_url&&b.amount_due>0&&<a href={b.payment_url} className="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-bold text-white">Payment options</a>}{b.status==='accepted'&&b.amount_due===0&&<span className="text-emerald-600">Paid</span>}</div></article>)}{bills.length===0&&!error&&<div className="rounded-xl border p-8 text-slate-500">No bills yet. Ask another registered business to invoice the email on your account.</div>}</div></div>;
+
+type Bill = {
+  id: number;
+  status: string;
+  sender: {
+    name: string;
+    email: string;
+  };
+  invoice_number: string;
+  description?: string;
+  currency: string;
+  total_amount: number;
+  amount_paid: number;
+  amount_due: number;
+  payment_status: string;
+  payment_url?: string;
+  due_date?: string;
+  items: {
+    name: string;
+    quantity: number;
+    unit_price: number;
+  }[];
+};
+
+export default function BillsPage() {
+  const [bills, setBills] = useState<Bill[]>([]);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState<number>();
+
+  const refresh = async () => {
+    try {
+      setError('');
+
+      const response = await commerce<{ data: Bill[] }>('bills');
+
+      setBills(response.data);
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : 'Unable to load bills.'
+      );
+    }
+  };
+
+  useEffect(() => {
+    void refresh();
+  }, []);
+
+  async function respond(
+    id: number,
+    decision: 'accepted' | 'declined'
+  ) {
+    setBusy(id);
+    setError('');
+
+    try {
+      await commerce(
+        `bills/${id}/respond`,
+        'POST',
+        { decision }
+      );
+
+      await refresh();
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : 'Unable to update bill.'
+      );
+    } finally {
+      setBusy(undefined);
+    }
+  }
+
+  return (
+    <div className="page-container py-10">
+      <h1 className="text-3xl font-bold">
+        Bills received
+      </h1>
+
+      <p className="mt-2 text-slate-600 dark:text-slate-300">
+        Invoices sent to your registered email appear here.
+        Accept a bill to unlock the sender’s payment options.
+        Only verified payments update its balance.
+      </p>
+
+      {error && (
+        <p role="alert" className="mt-5 text-red-600">
+          {error}
+        </p>
+      )}
+
+      <div className="mt-7 space-y-4">
+        {bills.map((b) => (
+          <article
+            key={b.id}
+            className="rounded-2xl border bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-emerald-600">
+                  {b.status}
+                </p>
+
+                <h2 className="mt-1 text-xl font-bold">
+                  {b.sender.name} · {b.invoice_number}
+                </h2>
+
+                <p className="text-sm text-slate-500">
+                  {b.sender.email}
+                  {b.due_date && ` · Due ${b.due_date}`}
+                </p>
+
+                <p className="mt-2">
+                  {b.description}
+                </p>
+              </div>
+
+              <div className="text-right">
+                <p className="text-xl font-bold">
+                  {money(b.total_amount, b.currency)}
+                </p>
+
+                <p className="text-sm">
+                  Paid: {money(b.amount_paid, b.currency)}
+                  {' · '}
+                  Due: {money(b.amount_due, b.currency)}
+                </p>
+
+                <p className="text-sm">
+                  Payment: {b.payment_status}
+                </p>
+              </div>
+            </div>
+
+            {b.items?.length > 0 && (
+              <div className="mt-4 border-t pt-3 text-sm">
+                {b.items.map((item, index) => (
+                  <p key={index}>
+                    {item.name} × {item.quantity}
+                    {' · '}
+                    {money(item.unit_price, b.currency)}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-5 flex gap-3">
+              {b.status === 'pending' && (
+                <>
+                  <button
+                    disabled={busy === b.id}
+                    onClick={() => respond(b.id, 'accepted')}
+                    className="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-bold text-white disabled:opacity-50"
+                  >
+                    {busy === b.id ? 'Processing...' : 'Accept bill'}
+                  </button>
+
+                  <button
+                    disabled={busy === b.id}
+                    onClick={() => respond(b.id, 'declined')}
+                    className="rounded-lg border px-5 py-2 text-sm font-semibold disabled:opacity-50"
+                  >
+                    Decline
+                  </button>
+                </>
+              )}
+
+              {b.status === 'accepted' &&
+                b.payment_url &&
+                b.amount_due > 0 && (
+                  <a
+                    href={b.payment_url}
+                    className="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-bold text-white"
+                  >
+                    Payment options
+                  </a>
+                )}
+
+              {b.status === 'accepted' &&
+                b.amount_due === 0 && (
+                  <span className="text-emerald-600">
+                    Paid
+                  </span>
+                )}
+            </div>
+          </article>
+        ))}
+
+        {bills.length === 0 && !error && (
+          <div className="rounded-xl border p-8 text-slate-500">
+            No bills yet. Ask another registered business
+            to invoice the email on your account.
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
